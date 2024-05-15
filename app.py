@@ -9,16 +9,13 @@ def remove_image_background(image, alpha_matte=True):
     """
     Removes the background of an image using the Rembg library.
         Args:
-        input_path (str): Path to the input image file.
-        output_path (str): Path to save the output image file.
+        image (PIL.Image): Input image object.
         alpha_matte (bool, optional): Whether to include an alpha channel
-            representing transparency in the output image. Defaults to False.
+            representing transparency in the output image. Defaults to True.
         Returns:
-        None
+        PIL.Image: Image with background removed.
     """
     try:
-        # Load the image using PIL (Rembg internally uses PIL)
-        image = Image.open(image)
         # Use Rembg to remove the background
         output = rembg.remove(image)
         # Optionally add an alpha channel for transparency
@@ -29,20 +26,16 @@ def remove_image_background(image, alpha_matte=True):
                 lambda p: 255 if p > 200 else 0
             )  # Threshold for transparency
             output.putalpha(mask)  # Apply refined alpha mask
-            # Save the output image
-        output.save("output_path.png")
-        print(f"Background removed and image saved to: ")
-    except FileNotFoundError:
-        print(f"Error: Input image file not found at: ")
+        return output
     except Exception as e:
-        print(f"An error occurred: {e}")
+        st.error(f"An error occurred: {e}")
 
 
 def get_image_download_link(img):
     buffered = BytesIO()
     img.save(buffered, format="PNG")
     img_str = base64.b64encode(buffered.getvalue()).decode()
-    href = f'<a href="data:image/png;base64,{img_str}">Download Image</a>'
+    href = f'<a href="data:image/png;base64,{img_str}" download="processed_image.png">Download Image</a>'
     return href
 
 
