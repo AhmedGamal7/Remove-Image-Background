@@ -2,7 +2,7 @@ import base64
 from io import BytesIO
 import streamlit as st
 from PIL import Image
-from rembg import rembg
+import rembg
 
 
 def remove_image_background(image, alpha_matte=True):
